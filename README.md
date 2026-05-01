@@ -3,8 +3,8 @@
 Full-stack team task manager with React + Vite frontend, Node.js + Express backend, PostgreSQL database, JWT auth, and role-based access control.
 
 ## Live URLs
-- **Frontend:** https://team-task-manager-production-b07e.up.railway.app
-- **Backend:** https://team-task-manager-production-09cf.up.railway.app
+- **Frontend:** https://team-task-manager-three-chi.vercel.app
+- **Backend:** https://team-task-manager-production-8432.up.railway.app
 
 ---
 
