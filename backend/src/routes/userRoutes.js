@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const { listUsers } = require('../controllers/userController');
-const { auth, requireGlobalAdmin } = require('../middleware/auth');
+const { auth } = require('../middleware/auth');
 
-router.get('/', auth, requireGlobalAdmin, listUsers);
+// Any authenticated user can list users (needed for task assignment dropdown)
+router.get('/', auth, listUsers);
 
 module.exports = router;

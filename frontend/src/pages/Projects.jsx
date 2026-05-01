@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../api/api";
+import http from "../api/http";
 
 export default function Projects() {
   const [projects, setProjects] = useState([]);
@@ -11,7 +11,7 @@ export default function Projects() {
 
   async function fetchProjects() {
     try {
-      const res = await api.get("/projects");
+      const res = await http.get("/projects");
       setProjects(res.data);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to load projects");
@@ -27,7 +27,7 @@ export default function Projects() {
     setError("");
 
     try {
-      await api.post("/projects", form);
+      await http.post("/projects", form);
       setForm({ name: "", description: "" });
       fetchProjects();
     } catch (err) {

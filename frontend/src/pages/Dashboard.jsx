@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../api/api";
+import http from "../api/http";
 
 export default function Dashboard() {
   const [stats, setStats] = useState({
@@ -14,15 +14,15 @@ export default function Dashboard() {
   useEffect(() => {
     async function loadDashboard() {
       try {
-        const res = await api.get("/tasks/dashboard");
+        const res = await http.get("/tasks/dashboard");
 
         setStats({
-          total: res.data.total || 0,
-          todo: res.data.todo || 0,
-          in_progress: res.data.in_progress || 0,
-          done: res.data.done || 0,
-          overdue: res.data.overdue || 0,
-          overdueItems: res.data.overdueItems || []
+          total: res.data.counts?.total || 0,
+          todo: res.data.counts?.todo || 0,
+          in_progress: res.data.counts?.in_progress || 0,
+          done: res.data.counts?.done || 0,
+          overdue: res.data.counts?.overdue || 0,
+          overdueItems: res.data.overdue_items || []
         });
       } catch (err) {
         console.log(err);

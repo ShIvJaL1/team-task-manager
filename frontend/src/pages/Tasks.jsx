@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import api from "../api/api";
+import http from "../api/http";
 
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState("all");
   const [form, setForm] = useState({
     title: "",
@@ -20,11 +21,13 @@ export default function Tasks() {
 
   async function loadData() {
     try {
-      const taskRes = await api.get("/tasks");
-      const projectRes = await api.get("/projects");
+      const taskRes = await http.get("/tasks");
+      const projectRes = await http.get("/projects");
+      const userRes = await http.get("/users");
 
       setTasks(Array.isArray(taskRes.data) ? taskRes.data : []);
       setProjects(Array.isArray(projectRes.data) ? projectRes.data : []);
+      setUsers(Array.isArray(userRes.data) ? userRes.data : []);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to load tasks");
     }
@@ -44,7 +47,7 @@ export default function Tasks() {
     }
 
     try {
-      await api.post("/tasks", form);
+      await http.post("/tasks", form);
 
       setForm({
         title: "",
@@ -63,7 +66,7 @@ export default function Tasks() {
 
   async function updateStatus(id, status) {
     try {
-      await api.patch(`/tasks/${id}/status`, { status });
+      await http.patch(`/tasks/${id}/status`, { status });
       loadData();
     } catch (err) {
       setError(err.response?.data?.message || "Failed to update status");
@@ -119,12 +122,18 @@ export default function Tasks() {
             ))}
           </select>
 
-          <input
-            placeholder="Assigned User ID"
+          <select
             value={form.assigned_to}
             onChange={(e) => setForm({ ...form, assigned_to: e.target.value })}
             required
-          />
+          >
+            <option value="">Assign to User</option>
+            {users.map((u) => (
+              <option key={u.id} value={u.id}>
+                {u.name} ({u.role})
+              </option>
+            ))}
+          </select>
 
           <input
             type="date"
@@ -189,7 +198,7 @@ export default function Tasks() {
                   {task.status?.replace("_", " ")}
                 </span>
                 <span className="badge badge-blue">
-                  #{task.id}
+                  #{task.id?.slice(0, 8)}
                 </span>
               </div>
 
@@ -199,7 +208,7 @@ export default function Tasks() {
                 <b>Project:</b> {task.project_name || task.project_id}
               </p>
               <p>
-                <b>Assigned:</b> {task.assigned_to}
+                <b>Assigned:</b> {task.assigned_to_name || task.assigned_to_email || "Unassigned"}
               </p>
               <p>
                 <b>Due:</b> {task.due_date?.slice(0, 10)}

@@ -1,257 +1,147 @@
-# Team Task Manager - Full Stack Assessment
+# Team Task Manager
 
-A deploy-ready full-stack Team Task Manager app built with React + Vite, Node.js + Express, PostgreSQL, JWT authentication, project CRUD, task assignment, role-based access, status tracking, and dashboard analytics.
+Full-stack team task manager with React + Vite frontend, Node.js + Express backend, PostgreSQL database, JWT auth, and role-based access control.
+
+## Live URLs
+- **Frontend:** _add after deploy_
+- **Backend:** _add after deploy_
+
+---
 
 ## Tech Stack
+- **Frontend:** React 19, Vite, React Router v7, Axios
+- **Backend:** Node.js, Express, PostgreSQL (Neon), JWT, bcrypt
+- **Deployment:** Railway
 
-- Frontend: React, Vite, React Router, Axios
-- Backend: Node.js, Express.js, PostgreSQL, JWT, bcrypt
-- Database: PostgreSQL
-- Deployment: Railway
+---
 
 ## Features
-
-- Signup and login with JWT
-- User roles: `admin` and `member`
-- Admin can create, update and delete projects
-- Admin can add project members
-- Admin can create, update and delete tasks
-- Members can view projects/tasks related to them
-- Members can update their assigned task status
-- Task statuses: `todo`, `in_progress`, `done`
-- Dashboard shows total, todo, in-progress, done and overdue task counts
+- Signup / Login with JWT
+- Roles: `admin` and `member`
+- Admin: create/update/delete projects, tasks, manage members
+- Member: view assigned projects/tasks, update task status
+- Task statuses: `todo` → `in_progress` → `done`
+- Dashboard: total, todo, in-progress, done, overdue counts
 - Overdue task list
-- REST APIs with validations and PostgreSQL relationships
+- Fully responsive UI
 
-## Folder Structure
-
-```txt
-team-task-manager/
-  backend/
-    src/
-      config/
-        db.js
-        initDb.js
-      controllers/
-        authController.js
-        projectController.js
-        taskController.js
-        userController.js
-      middleware/
-        auth.js
-        errorHandler.js
-      routes/
-        authRoutes.js
-        projectRoutes.js
-        taskRoutes.js
-        userRoutes.js
-      utils/
-        token.js
-      server.js
-    .env.example
-    package.json
-    railway.json
-  frontend/
-    src/
-      api/
-        http.js
-      components/
-        Navbar.jsx
-        ProtectedRoute.jsx
-      context/
-        AuthContext.jsx
-      pages/
-        Dashboard.jsx
-        Login.jsx
-        Projects.jsx
-        Signup.jsx
-        Tasks.jsx
-      App.jsx
-      main.jsx
-      styles.css
-    .env.example
-    index.html
-    package.json
-    railway.json
-  railway.json
-  README.md
-```
+---
 
 ## Local Setup
 
-### 1. Clone project
-
-```bash
-git clone <your-repo-url>
-cd team-task-manager
-```
-
-### 2. Setup PostgreSQL
-
-Create a local PostgreSQL database:
-
-```sql
-CREATE DATABASE team_task_manager;
-```
-
-The backend automatically creates required tables on server startup.
-
-### 3. Backend setup
-
+### Backend
 ```bash
 cd backend
 npm install
-cp .env.example .env
-npm run dev
+# .env is already configured
+npm start
+# runs on http://localhost:5000
 ```
 
-Backend runs on:
-
-```txt
-http://localhost:5000
-```
-
-### 4. Frontend setup
-
-Open another terminal:
-
+### Frontend
 ```bash
 cd frontend
 npm install
-cp .env.example .env
+# .env is already configured
 npm run dev
+# runs on http://localhost:5174
 ```
 
-Frontend runs on:
+---
 
-```txt
-http://localhost:5173
+## Railway Deployment (Step by Step)
+
+### 1. Push to GitHub
+```bash
+git add .
+git commit -m "ready for deployment"
+git push
 ```
 
-## Environment Variables
-
-### Backend `.env`
-
-```env
-PORT=5000
-DATABASE_URL=postgresql://postgres:password@localhost:5432/team_task_manager
-JWT_SECRET=replace_with_a_long_random_secret
+### 2. Deploy Backend
+1. Go to [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub repo**
+2. Select your repo
+3. Click **Add variables** and add:
+```
+DATABASE_URL=postgresql://neondb_owner:npg_7MKwHLRkb0rZ@ep-frosty-dream-amys07ev.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require
+JWT_SECRET=team_task_secret_123
 JWT_EXPIRES_IN=1d
-CLIENT_URL=http://localhost:5173
-NODE_ENV=development
+NODE_ENV=production
+CLIENT_URL=https://YOUR_FRONTEND_URL (add after step 3)
 ```
+4. Under **Settings → Root Directory** set: `backend`
+5. Under **Settings → Start Command** set: `npm start`
+6. Click **Deploy** → copy the generated domain (e.g. `https://xxx.up.railway.app`)
 
-### Frontend `.env`
-
-```env
-VITE_API_URL=http://localhost:5000/api
+### 3. Deploy Frontend
+1. In the same Railway project → **New Service** → **GitHub repo** (same repo)
+2. Under **Settings → Root Directory** set: `frontend`
+3. Add variable:
 ```
+VITE_API_URL=https://YOUR_BACKEND_URL/api
+```
+4. Under **Settings → Build Command** set: `npm install && npm run build`
+5. Under **Settings → Start Command** set: `npm run preview -- --host 0.0.0.0 --port 8080`
+6. Click **Deploy** → copy the frontend domain
+
+### 4. Update Backend CORS
+Go back to the **backend service** → Variables → add/update:
+```
+CLIENT_URL=https://YOUR_FRONTEND_URL
+```
+Redeploy backend.
+
+---
 
 ## API Endpoints
 
 ### Auth
-
-```txt
+```
 POST /api/auth/signup
 POST /api/auth/login
 GET  /api/auth/me
 ```
 
 ### Users
-
-```txt
-GET /api/users
 ```
-
-Admin only.
+GET /api/users          (authenticated users)
+```
 
 ### Projects
-
-```txt
-GET    /api/projects
-GET    /api/projects/:id
-POST   /api/projects
-PUT    /api/projects/:id
-DELETE /api/projects/:id
-POST   /api/projects/:id/members
-DELETE /api/projects/:id/members/:userId
 ```
-
-Project create/update/delete/member management is admin only.
+GET    /api/projects
+POST   /api/projects                    (admin only)
+PUT    /api/projects/:id                (admin only)
+DELETE /api/projects/:id                (admin only)
+POST   /api/projects/:id/members        (admin only)
+DELETE /api/projects/:id/members/:uid   (admin only)
+```
 
 ### Tasks
-
-```txt
+```
 GET    /api/tasks/dashboard
 GET    /api/tasks
-GET    /api/tasks/:id
-POST   /api/tasks
-PUT    /api/tasks/:id
-PATCH  /api/tasks/:id/status
-DELETE /api/tasks/:id
+POST   /api/tasks                       (admin only)
+PUT    /api/tasks/:id                   (admin only)
+PATCH  /api/tasks/:id/status            (assigned member or admin)
+DELETE /api/tasks/:id                   (admin only)
 ```
 
-Task create/update/delete is admin only. Members can update assigned task status.
-
-## Railway Deployment
-
-Railway can deploy Express and React apps from GitHub, and service variables are added from each service's Variables tab. Add PostgreSQL from Railway project canvas and use its generated `DATABASE_URL` in backend variables.
-
-### Recommended Railway setup
-
-Create 3 Railway services:
-
-1. PostgreSQL database
-2. Backend service from GitHub repo with root directory: `backend`
-3. Frontend service from GitHub repo with root directory: `frontend`
-
-### Backend Railway variables
-
-```env
-DATABASE_URL=<Railway PostgreSQL DATABASE_URL>
-JWT_SECRET=<long-random-secret>
-JWT_EXPIRES_IN=1d
-CLIENT_URL=<your-frontend-railway-url>
-NODE_ENV=production
-```
-
-### Frontend Railway variables
-
-```env
-VITE_API_URL=<your-backend-railway-url>/api
-```
-
-### Railway notes
-
-- Backend start command: `npm start`
-- Frontend build command: `npm install && npm run build`
-- Frontend start command: `npm start`
-- Generate public domains for both frontend and backend services.
+---
 
 ## Demo Flow
+1. Signup as **admin**
+2. Open incognito → signup as **member**
+3. As admin: create a project → create a task → assign to member
+4. As member: login → view task → update status to `done`
+5. As admin: check dashboard for updated counts
 
-1. Signup as admin
-2. Signup as member in another browser/incognito
-3. Login as admin
-4. Create a project and add member
-5. Create a task assigned to member with due date
-6. Login as member
-7. View task and update status from `todo` to `in_progress` or `done`
-8. Show dashboard counts and overdue items
+---
 
-## Demo Credentials Example
-
-You can create these manually through signup:
-
-```txt
-Admin: admin@example.com / 123456
-Member: member@example.com / 123456
+## Database Schema
 ```
-
-## Submission Checklist
-
-- Live frontend URL
-- Live backend URL
-- GitHub repository
-- README file
-- 2-5 minute demo video
+users           (id, name, email, password_hash, role, created_at)
+projects        (id, name, description, created_by, created_at)
+project_members (project_id, user_id, role)
+tasks           (id, project_id, title, description, assigned_to, due_date, status, created_by)
+```
