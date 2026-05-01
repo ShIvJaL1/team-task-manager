@@ -5,8 +5,8 @@ export default defineConfig({
   plugins: [react()],
   preview: {
     host: '0.0.0.0',
-    port: 8080,
-    allowedHosts: ['all']
+    port: parseInt(process.env.PORT) || 8080,
+    allowedHosts: 'all'
   },
   server: {
     host: '0.0.0.0',
