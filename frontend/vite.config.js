@@ -6,10 +6,11 @@ export default defineConfig({
   preview: {
     host: '0.0.0.0',
     port: parseInt(process.env.PORT) || 8080,
-    allowedHosts: 'all'
+    allowedHosts: ['all', '.railway.app']
   },
   server: {
     host: '0.0.0.0',
-    port: 5173
+    port: 5173,
+    allowedHosts: 'all'
   }
 })
