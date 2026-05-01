@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
-    "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0 --port ${PORT:-4173}",
-    "start": "vite preview --host 0.0.0.0 --port ${PORT:-4173}"
-  },
+  "dev": "vite --host 0.0.0.0",
+  "build": "vite build",
+  "preview": "vite preview --host 0.0.0.0 --port 8080",
+  "start": "vite preview --host 0.0.0.0 --port 8080"
+},
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.4",
     "axios": "^1.7.9",
