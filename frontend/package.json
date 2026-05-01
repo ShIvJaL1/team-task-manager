@@ -7,15 +7,17 @@
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "vite build && vite preview"
+    "start": "vite build && serve -s dist -l 8080"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.4",
     "axios": "^1.7.9",
-    "vite": "^6.0.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.1.1"
+    "react-router-dom": "^7.1.1",
+    "vite": "^6.0.7"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "serve": "^14.2.6"
+  }
 }
